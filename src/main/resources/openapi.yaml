@@ -1,0 +1,274 @@
+openapi: 3.0.0
+info:
+  title: Business Management System API
+  version: 1.0.0
+paths:
+  /customers:
+    post:
+      summary: Create Customer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '201':
+          description: Customer created successfully
+    get:
+      summary: List Customers
+      responses:
+        '200':
+          description: List of customers
+  /customers/{dni}:
+    get:
+      summary: Read Customer
+      parameters:
+        - in: path
+          name: dni
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer details
+        '404':
+          description: Customer not found
+    put:
+      summary: Update Customer
+      parameters:
+        - in: path
+          name: dni
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '200':
+          description: Customer updated successfully
+        '404':
+          description: Customer not found
+    delete:
+      summary: Delete Customer
+      parameters:
+        - in: path
+          name: dni
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Customer deleted successfully
+        '404':
+          description: Customer not found
+
+  /invoices:
+    post:
+      summary: Create Invoice
+      responses:
+        '201':
+          description: Invoice created successfully
+    get:
+      summary: List Invoices
+      responses:
+        '200':
+          description: List of invoices
+  /invoices/{invoice_id}/orders:
+    post:
+      summary: Add Order to Invoice
+      parameters:
+        - in: path
+          name: invoice_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '201':
+          description: Order added successfully
+        '404':
+          description: Invoice not found
+    put:
+      summary: Apply Discounts to Invoice
+      parameters:
+        - in: path
+          name: invoice_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Discount'
+      responses:
+        '200':
+          description: Discounts applied successfully
+        '404':
+          description: Invoice not found
+  /invoices/{invoice_id}/final-price:
+    get:
+      summary: Calculate Final Price of Invoice
+      parameters:
+        - in: path
+          name: invoice_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Final price calculated
+        '404':
+          description: Invoice not found
+  /invoices/{invoice_id}/final-price-iva:
+    get:
+      summary: Calculate Final Price with VAT of Invoice
+      parameters:
+        - in: path
+          name: invoice_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Final price with VAT calculated
+        '404':
+          description: Invoice not found
+  /invoices/{invoice_id}/pdf:
+    get:
+      summary: Generate PDF Invoice
+      parameters:
+        - in: path
+          name: invoice_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Invoice in PDF format generated
+        '404':
+          description: Invoice not found
+
+  /parts:
+    post:
+      summary: Create Part/Inventory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Part'
+      responses:
+        '201':
+          description: Part/inventory created successfully
+    get:
+      summary: List Parts/Inventory
+      responses:
+        '200':
+          description: List of parts/inventory
+  /parts/{reference}:
+    get:
+      summary: Read Part/Inventory
+      parameters:
+        - in: path
+          name: reference
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Part/inventory details
+        '404':
+          description: Part/inventory not found
+    put:
+      summary: Update Part/Inventory
+      parameters:
+        - in: path
+          name: reference
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Part'
+      responses:
+        '200':
+          description: Part/inventory updated successfully
+        '404':
+          description: Part/inventory not found
+    delete:
+      summary: Delete Part/Inventory
+      parameters:
+        - in: path
+          name: reference
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Part/inventory deleted successfully
+        '404':
+          description: Part/inventory not found
+
+components:
+  schemas:
+    Customer:
+      type: object
+      properties:
+        nombre:
+          type: string
+        telefono:
+          type: string
+        direccion:
+          type: string
+        dni:
+          type: string
+      required:
+        - nombre
+        - telefono
+        - direccion
+        - dni
+
+    Order:
+      type: object
+      properties:
+        producto:
+          type: string
+        cantidad:
+          type: integer
+        precio_unitario:
+          type: number
+      required:
+        - producto
+        - cantidad
+        - precio_unitario
+
+    Discount:
+      type: object
+      properties:
+        descuento_porcentaje:
+          type: number
+      required:
+        - descuento_porcentaje
+
+    Part:
+      type: object
+      properties:
+        nombre:
+          type: string
+        referencia:
+          type: string
+        precio:
+          type: number
+      required:
+        - nombre
+        - referencia
+        - precio
